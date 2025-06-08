@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظم يومي زجاجي | Glassmorphism Daily Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #2c3e50;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 166, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(102, 166, 255, 0.6); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #2c3e50;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-glass:hover::before {
+            left: 100%;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(102, 123, 234, 0.4);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 123, 234, 0.6);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        input[type="text"], input[type="time"], input[type="number"] {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="time"]:focus, input[type="number"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 123, 234, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-item.completed {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+
+        .task-item.completed span {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .timer-running {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .header-title {
+            background: linear-gradient(135deg, #ffffff, #f8f9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .task-counter {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .progress-ring-circle {
+            stroke: rgba(102, 123, 234, 0.3);
+            stroke-width: 8;
+            fill: transparent;
+            r: 52;
+            cx: 60;
+            cy: 60;
+        }
+
+        .progress-ring-progress {
+            stroke: #667eea;
+            stroke-width: 8;
+            fill: transparent;
+            r: 52;
+            cx: 60;
+            cy: 60;
+            stroke-dasharray: 327;
+            stroke-dashoffset: 327;
+            transition: stroke-dashoffset 0.5s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+
+        .notification-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .notification-popup.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification-popup.success {
+            border-left: 4px solid #48bb78;
+        }
+
+        .notification-popup.warning {
+            border-left: 4px solid #ed8936;
+        }
+
+        .notification-popup.info {
+            border-left: 4px solid #4299e1;
+        }
+
+        @media (max-width: 768px) {
+            .timer-display {
+                font-size: 3rem;
+            }
+            
+            .glass-card {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <main class="w-full max-w-6xl mx-auto">
+        <header class="text-center mb-12">
+            <h1 class="header-title text-5xl md:text-7xl font-bold mb-4">يومي المنظم ✨</h1>
+            <p class="text-white/90 text-lg md:text-xl font-light">خطط يومك، ركز في عملك، وحقق أهدافك بأناقة</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Pomodoro Timer -->
+            <div class="lg:col-span-1 glass-card p-8 flex flex-col items-center relative">
+                <h2 class="text-2xl font-bold mb-6 text-white">🍅 مؤقت التركيز</h2>
+                
+                <!-- Progress Ring -->
+                <div class="progress-ring mb-4">
+                    <svg class="absolute">
+                        <circle class="progress-ring-circle"></circle>
+                        <circle id="progress-circle" class="progress-ring-progress"></circle>
+                    </svg>
+                    <div id="pomodoro-timer" class="timer-display absolute inset-0 flex items-center justify-center text-4xl font-bold">25:00</div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 mb-6 justify-center">
+                    <button onclick="setTimer(25)" class="btn-glass px-4 py-2 rounded-full text-sm font-semibold">🎯 عمل</button>
+                    <button onclick="setTimer(5)" class="btn-glass px-4 py-2 rounded-full text-sm font-semibold">☕ استراحة</button>
+                    <button onclick="setTimer(15)" class="btn-glass px-4 py-2 rounded-full text-sm font-semibold">🛌 راحة طويلة</button>
+                </div>
+
+                <!-- Custom Timer Input -->
+                <div class="flex gap-3 mb-6 w-full justify-center">
+                    <input type="number" id="custom-minutes" placeholder="دقائق" min="1" max="120" class="w-20 p-3 rounded-xl text-center font-semibold">
+                    <button onclick="setCustomTimer()" class="btn-glass px-4 py-3 rounded-xl text-sm font-semibold">⏰ تحديد</button>
+                </div>
+
+                <div class="flex gap-4 w-full">
+                    <button id="start-pause-btn" class="btn-primary font-bold py-3 px-8 rounded-xl flex-1 text-lg">▶️ ابدأ</button>
+                    <button onclick="resetTimer()" class="btn-glass py-3 px-6 rounded-xl">🔄</button>
+                </div>
+
+                <!-- Session Counter -->
+                <div class="mt-6 text-center">
+                    <p class="text-white/80 text-sm">جلسات اليوم</p>
+                    <div id="session-counter" class="text-2xl font-bold text-white">0</div>
+                </div>
+            </div>
+
+            <!-- Schedule -->
+            <div class="lg:col-span-2 glass-card p-8">
+                <!-- Header with Task Counter -->
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6">
+                    <h2 class="text-3xl font-bold text-white mb-4 sm:mb-0">📋 مهام اليوم</h2>
+                    <div id="task-counter" class="task-counter text-sm font-bold px-4 py-2 rounded-full">
+                        المكتمل: 0 / 0
+                    </div>
+                </div>
+                
+                <!-- Add Task Form -->
+                <form id="add-task-form" class="flex flex-col sm:flex-row gap-3 mb-6">
+                    <input type="text" id="task-input" placeholder="✍️ اكتب مهمة جديدة..." class="flex-grow p-4 rounded-xl font-semibold" required>
+                    <input type="time" id="task-time-input" class="p-4 rounded-xl font-semibold" required>
+                    <button type="submit" class="btn-primary font-bold py-4 px-8 rounded-xl">➕ إضافة</button>
+                </form>
+
+                <!-- Task List -->
+                <div id="task-list" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                    <!-- Tasks will be injected here by JS -->
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="flex gap-3 mt-6 flex-wrap">
+                    <button onclick="clearCompletedTasks()" class="btn-glass px-4 py-2 rounded-xl text-sm font-semibold">🗑️ حذف المكتمل</button>
+                    <button onclick="markAllComplete()" class="btn-glass px-4 py-2 rounded-xl text-sm font-semibold">✅ تمييز الكل</button>
+                    <button onclick="exportTasks()" class="btn-glass px-4 py-2 rounded-xl text-sm font-semibold">💾 تصدير</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-card p-6 text-center">
+                <div class="text-3xl font-bold text-white mb-2" id="today-tasks">0</div>
+                <div class="text-white/80">مهام اليوم</div>
+            </div>
+            <div class="glass-card p-6 text-center">
+                <div class="text-3xl font-bold text-white mb-2" id="completion-rate">0%</div>
+                <div class="text-white/80">معدل الإنجاز</div>
+            </div>
+            <div class="glass-card p-6 text-center">
+                <div class="text-3xl font-bold text-white mb-2" id="focus-minutes">0</div>
+                <div class="text-white/80">دقائق التركيز</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elements ---
+            const taskForm = document.getElementById('add-task-form');
+            const taskInput = document.getElementById('task-input');
+            const taskTimeInput = document.getElementById('task-time-input');
+            const taskList = document.getElementById('task-list');
+            const pomodoroTimerEl = document.getElementById('pomodoro-timer');
+            const startPauseBtn = document.getElementById('start-pause-btn');
+            const customMinutesInput = document.getElementById('custom-minutes');
+            const taskCounterEl = document.getElementById('task-counter');
+            const progressCircle = document.getElementById('progress-circle');
+            const sessionCounterEl = document.getElementById('session-counter');
+            const notificationContainer = document.getElementById('notification-container');
+
+            // --- State ---
+            let timerInterval;
+            let totalSeconds = 25 * 60;
+            let initialSeconds = 25 * 60;
+            let isRunning = false;
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            let sessions = parseInt(localStorage.getItem('sessions')) || 0;
+            let focusMinutes = parseInt(localStorage.getItem('focusMinutes')) || 0;
+
+            // --- Notification System ---
+            function showNotification(message, type = 'info', duration = 5000) {
+                const notification = document.createElement('div');
+                notification.className = `notification-popup ${type}`;
+                notification.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="text-2xl">
+                            ${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-800">${message.title || 'إشعار'}</div>
+                            <div class="text-sm text-gray-600">${message.body || message}</div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                    </div>
+                `;
+                
+                notificationContainer.appendChild(notification);
+                
+                // Show animation
+                setTimeout(() => notification.classList.add('show'), 100);
+                
+                // Auto remove
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 500);
+                }, duration);
+
+                // Play notification sound
+                playNotificationSound();
+            }
+
+            function playNotificationSound() {
+                // Create audio context for notification sound
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+            }
+
+            // --- Pomodoro Functions ---
+            const updateTimerDisplay = () => {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                pomodoroTimerEl.textContent = timeString;
+                document.title = isRunning ? `${timeString} - يومي المنظم` : 'يومي المنظم';
+                
+                // Update progress ring
+                const progress = ((initialSeconds - totalSeconds) / initialSeconds) * 327;
+                progressCircle.style.strokeDashoffset = 327 - progress;
+                
+                // Add timer running class
+                if (isRunning) {
+                    pomodoroTimerEl.parentElement.classList.add('timer-running');
+                } else {
+                    pomodoroTimerEl.parentElement.classList.remove('timer-running');
+                }
+            };
+
+            const startTimer = () => {
+                if (isRunning) return;
+                isRunning = true;
+                startPauseBtn.innerHTML = '⏸️ إيقاف';
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimerDisplay();
+                    if (totalSeconds < 0) {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        startPauseBtn.innerHTML = '▶️ ابدأ';
+                        
+                        // Update session count and focus minutes
+                        sessions++;
+                        focusMinutes += Math.floor(initialSeconds / 60);
+                        localStorage.setItem('sessions', sessions);
+                        localStorage.setItem('focusMinutes', focusMinutes);
+                        updateStats();
+                        
+                        showNotification({
+                            title: '🎉 انتهى الوقت!',
+                            body: 'أحسنت! حان وقت أخذ استراحة قصيرة.'
+                        }, 'success');
+                        
+                        resetTimer();
+                    }
+                }, 1000);
+            };
+
+            const pauseTimer = () => {
+                if (!isRunning) return;
+                isRunning = false;
+                startPauseBtn.innerHTML = '▶️ استئناف';
+                clearInterval(timerInterval);
+            };
+
+            window.setTimer = (minutes) => {
+                clearInterval(timerInterval);
+                isRunning = false;
+                totalSeconds = minutes * 60;
+                initialSeconds = minutes * 60;
+                updateTimerDisplay();
+                startPauseBtn.innerHTML = '▶️ ابدأ';
+            };
+            
+            window.setCustomTimer = () => {
+                const minutes = parseInt(customMinutesInput.value, 10);
+                if (!isNaN(minutes) && minutes > 0 && minutes <= 120) {
+                    setTimer(minutes);
+                    customMinutesInput.value = '';
+                    showNotification(`تم تعيين المؤقت لـ ${minutes} دقيقة`, 'info', 3000);
+                } else {
+                    showNotification('يرجى إدخال رقم صحيح بين 1 و 120', 'warning', 3000);
+                }
+            };
+
+            window.resetTimer = () => {
+                setTimer(25);
+            };
+            
+            startPauseBtn.addEventListener('click', () => {
+                if (isRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
+            });
+
+            // --- Task Functions ---
+            const saveTasks = () => {
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                updateStats();
+            };
+
+            const updateStats = () => {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.completed).length;
+                const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+                document.getElementById('today-tasks').textContent = totalTasks;
+                document.getElementById('completion-rate').textContent = `${completionRate}%`;
+                document.getElementById('focus-minutes').textContent = focusMinutes;
+                sessionCounterEl.textContent = sessions;
+            };
+
+            const renderTasks = () => {
+                taskList.innerHTML = '';
+
+                const completedCount = tasks.filter(task => task.completed).length;
+                const totalCount = tasks.length;
+                taskCounterEl.textContent = `المكتمل: ${completedCount} / ${totalCount}`;
+
+                if (tasks.length === 0) {
+                    taskList.innerHTML = `
+                        <div class="text-center text-white/70 py-12">
+                            <div class="text-6xl mb-4">📝</div>
+                            <p class="text-lg">لا توجد مهام حتى الآن.</p>
+                            <p class="text-sm">أضف مهمة جديدة لتبدأ رحلة الإنجاز!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                tasks.sort((a, b) => a.time.localeCompare(b.time));
+
+                tasks.forEach((task, index) => {
+                    const taskEl = document.createElement('div');
+                    taskEl.className = `task-item flex items-center justify-between p-4 rounded-xl ${task.completed ? 'completed' : ''}`;
+                    taskEl.style.animationDelay = `${index * 0.1}s`;
+
+                    const priority = task.priority || 'medium';
+                    const priorityIcon = priority === 'high' ? '🔥' : priority === 'low' ? '🟢' : '🟡';
+
+                    taskEl.innerHTML = `
+                        <div class="flex items-center gap-4 flex-1">
+                            <input type="checkbox" onchange="toggleTask(${task.id})" ${task.completed ? 'checked' : ''} class="w-5 h-5 accent-purple-500 cursor-pointer transform scale-125">
+                            <div class="flex-1">
+                                <span class="font-semibold text-white text-lg">${task.text}</span>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-sm bg-blue-500/20 text-blue-200 px-3 py-1 rounded-full">
+                                        🕐 ${formatTime(task.time)}
+                                    </span>
+                                    <span class="text-sm bg-purple-500/20 text-purple-200 px-3 py-1 rounded-full">
+                                        ${priorityIcon} ${priority === 'high' ? 'عالية' : priority === 'low' ? 'منخفضة' : 'متوسطة'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                           <button onclick="editTaskPrompt(${task.id})" class="text-white/60 hover:text-blue-400 text-xl transition-colors">✏️</button>
+                           <button onclick="deleteTask(${task.id})" class="text-white/60 hover:text-red-400 text-xl transition-colors">🗑️</button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskEl);
+                });
+            };
+
+            const formatTime = (timeString) => {
+                const [hourString, minute] = timeString.split(':');
+                const hour = parseInt(hourString, 10);
+                const ampm = hour >= 12 ? 'م' : 'ص';
+                const formattedHour = hour % 12 || 12;
+                return `${formattedHour}:${minute} ${ampm}`;
+            };
+            
+            taskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = taskInput.value.trim();
+                const time = taskTimeInput.value;
+                if (text && time) {
+                    const newTask = {
+                        id: Date.now(),
+                        text: text,
+                        time: time,
+                        completed: false,
+                        priority: 'medium',
+                        createdAt: new Date().toISOString()
+                    };
+                    tasks.push(newTask);
+                    saveTasks();
+                    renderTasks();
+                    taskInput.value = '';
+                    taskTimeInput.value = '';
+                    
+                    showNotification(`تم إضافة المهمة: ${text}`, 'success', 3000);
+                }
+            });
+
+            window.toggleTask = (id) => {
+                const task = tasks.find(t => t.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    saveTasks();
+                    renderTasks();
+                    
+                    if (task.completed) {
+                        showNotification(`✅ تم إنجاز: ${task.text}`, 'success', 3000);
+                    } else {
+                        showNotification(`↩️ تم إلغاء إنجاز: ${task.text}`, 'info', 3000);
+                    }
+                }
+            };
+            
+            window.deleteTask = (id) => {
+                const task = tasks.find(t => t.id === id);
+                if (task && confirm(`هل أنت متأكد من حذف المهمة: "${task.text}"؟`)) {
+                    tasks = tasks.filter(t => t.id !== id);
+                    saveTasks();
+                    renderTasks();
+                    showNotification(`🗑️ تم حذف المهمة`, 'warning', 3000);
+                }
+            };
+
+            window.editTaskPrompt = (id) => {
+                const task = tasks.find(t => t.id === id);
+                if (task) {
+                    const newText = prompt('تعديل المهمة:', task.text);
+                    if (newText && newText.trim() !== '') {
+                        task.text = newText.trim();
+                        saveTasks();
+                        renderTasks();
+                        showNotification(`✏️ تم تعديل المهمة`, 'info', 3000);
+                    }
+                }
+            };
+
+            // --- Additional Functions ---
+            window.clearCompletedTasks = () => {
+                const completedCount = tasks.filter(task => task.completed).length;
+                if (completedCount > 0 && confirm(`هل تريد حذف ${completedCount} مهمة مكتملة؟`)) {
+                    tasks = tasks.filter(task => !task.completed);
+                    saveTasks();
+                    renderTasks();
+                    showNotification(`🗑️ تم حذف ${completedCount} مهمة مكتملة`, 'success', 3000);
+                }
+            };
+
+            window.markAllComplete = () => {
+                const incompleteCount = tasks.filter(task => !task.completed).length;
+                if (incompleteCount > 0 && confirm(`هل تريد تمييز ${incompleteCount} مهمة كمكتملة؟`)) {
+                    tasks.forEach(task => task.completed = true);
+                    saveTasks();
+                    renderTasks();
+                    showNotification(`✅ تم تمييز جميع المهام كمكتملة!`, 'success', 3000);
+                }
+            };
+
+            window.exportTasks = () => {
+                const dataStr = JSON.stringify(tasks, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `my-tasks-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+                showNotification('💾 تم تصدير المهام بنجاح', 'success', 3000);
+            };
+
+            // --- Time-based Notifications ---
+            const checkScheduledTasks = () => {
+                const now = new Date();
+                const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+                tasks.forEach(task => {
+                    if (task.time === currentTime && !task.completed && !task.notified) {
+                        showNotification({
+                            title: '⏰ حان وقت المهمة!',
+                            body: `مهمتك "${task.text}" قد بدأت الآن.`
+                        }, 'warning', 8000);
+                        task.notified = true;
+                        saveTasks();
+                    }
+                });
+
+                // Reset notification flags at midnight
+                if (currentTime === '00:00') {
+                    tasks.forEach(task => task.notified = false);
+                    saveTasks();
+                }
+            };
+
+            // --- Keyboard Shortcuts ---
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'Enter':
+                            e.preventDefault();
+                            if (taskInput === document.activeElement) {
+                                taskForm.dispatchEvent(new Event('submit'));
+                            }
+                            break;
+                        case ' ':
+                            e.preventDefault();
+                            startPauseBtn.click();
+                            break;
+                        case 'r':
+                            e.preventDefault();
+                            resetTimer();
+                            break;
+                    }
+                }
+            });
+
+            // --- Auto-save on page unload ---
+            window.addEventListener('beforeunload', () => {
+                saveTasks();
+            });
+
+            // --- Initial Setup ---
+            renderTasks();
+            updateTimerDisplay();
+            updateStats();
+            
+            // Check for scheduled tasks every minute
+            setInterval(checkScheduledTasks, 60000);
+
+            // Welcome message
+            setTimeout(() => {
+                showNotification({
+                    title: '🎉 أهلاً وسهلاً!',
+                    body: 'مرحباً بك في منظم يومك. ابدأ بإضافة مهمة جديدة!'
+                }, 'info', 5000);
+            }, 1000);
+
+        });
+    </script>
+</body>
+</html>
